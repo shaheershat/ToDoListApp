@@ -102,10 +102,8 @@
   <script>
     let currentTheme = localStorage.getItem("theme") || "dark";
 
-    // Set initial theme
     document.documentElement.classList.toggle("dark", currentTheme === "dark");
 
-    // Init particles with correct color
     function loadParticles(color) {
       particlesJS("particles-js", {
         particles: {
@@ -172,14 +170,12 @@
       });
     }
 
-    // Clear existing particles and reinit
     function reloadParticles() {
       const color = document.documentElement.classList.contains("dark") ? "#ffffff" : "#000000";
-      document.querySelector("#particles-js").innerHTML = ""; // clear canvas
+      document.querySelector("#particles-js").innerHTML = ""; 
       loadParticles(color);
     }
 
-    // Theme toggle handler
     const toggleDarkMode = document.getElementById("toggleDarkMode");
     toggleDarkMode.addEventListener("click", () => {
       document.documentElement.classList.toggle("dark");
@@ -188,7 +184,6 @@
       reloadParticles();
     });
 
-    // Init particles on first load
     window.addEventListener("DOMContentLoaded", () => {
       reloadParticles();
     });

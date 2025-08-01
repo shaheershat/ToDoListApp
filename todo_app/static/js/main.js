@@ -15,13 +15,12 @@ const closeModalBtn = document.getElementById("closeModalBtn");
 const calendarInput = document.getElementById("calendarInput");
 
 
-// Initialize Flatpickr for the calendar input
 flatpickr(calendarInput, {
     dateFormat: "Y-m-d",
-    maxDate: "today", // Don't allow selecting future dates
+    maxDate: "today", 
     onChange: function(selectedDates, dateStr, instance) {
         if (selectedDates.length > 0) {
-            viewOldTasks(dateStr); // Pass the selected date string
+            viewOldTasks(dateStr); 
         }
     }
 });
@@ -29,22 +28,19 @@ flatpickr(calendarInput, {
 
 function renderTasks() {
     taskList.innerHTML = "";
-    // Filter out tasks that are done and not repeating, if they were completed yesterday or earlier.
-    // This simulates the "day end" removal visually.
     const now = new Date();
-    now.setHours(0,0,0,0); // Start of today
+    now.setHours(0,0,0,0); 
 
     const activeTasks = tasks.filter(task => {
-        if (!task.done) return true; // Keep all undone tasks
-        if (task.repeat) return true; // Keep repeating tasks even if done
+        if (!task.done) return true; 
+        if (task.repeat) return true; 
 
-        // For one-time tasks, if done, remove from main list display if completed before today
         if (task.completedAt) {
             const completedDate = new Date(task.completedAt);
             completedDate.setHours(0,0,0,0);
-            return completedDate.getTime() === now.getTime(); // Only show if completed today
+            return completedDate.getTime() === now.getTime(); 
         }
-        return true; // Should not happen, but a fallback
+        return true;
     });
 
 
@@ -70,7 +66,7 @@ function renderTasks() {
         `;
         taskList.appendChild(li);
     });
-    displayProgressStats(); // Update stats after rendering tasks
+    displayProgressStats(); 
 }
 
 function addTask() {
@@ -121,7 +117,7 @@ function toggleDone(i) {
     tasks[i].done = !tasks[i].done;
     tasks[i].completedAt = tasks[i].done ? new Date().toISOString() : null;
     saveTasks();
-    renderTasks(); // Update stats after toggling
+    renderTasks(); 
 }
 
 function saveTasks() {
@@ -183,8 +179,8 @@ function getCSRFToken() {
 
 function getStartOfWeek(date) {
     const d = new Date(date);
-    const day = d.getDay(); // 0 for Sunday, 6 for Saturday
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
+    const day = d.getDay(); 
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); 
     d.setDate(diff);
     d.setHours(0, 0, 0, 0);
     return d;
@@ -195,36 +191,34 @@ function displayProgressStats() {
     today.setHours(0, 0, 0, 0);
 
     let completedToday = 0;
-    let totalTasksToday = 0; // This should ideally count tasks that were *due* or active today
+    let totalTasksToday = 0; 
 
-    const weeklyCompletion = new Array(7).fill(0); // 0: Mon, 1: Tue, ..., 6: Sun
+    const weeklyCompletion = new Array(7).fill(0); 
     const startOfWeek = getStartOfWeek(new Date());
 
     tasks.forEach(task => {
-        // Only count tasks that were 'active' today or completed today for 'Today's Progress'
         const isTodayTask = (task.remindAt && new Date(task.remindAt).toDateString() === today.toDateString()) ||
                             (task.completedAt && new Date(task.completedAt).toDateString() === today.toDateString()) ||
-                            (task.repeat && !task.done); // Assume repeating tasks are always "today's" until done
+                            (task.repeat && !task.done); 
 
         if (isTodayTask) {
-             totalTasksToday++; // Count active/relevant tasks for today's total
+             totalTasksToday++; 
              if (task.done && task.completedAt && new Date(task.completedAt).toDateString() === today.toDateString()) {
                 completedToday++;
             }
         }
 
 
-        // Stats for the week
         if (task.completedAt) {
             const completedDate = new Date(task.completedAt);
             if (completedDate >= startOfWeek) {
-                const dayIndex = (completedDate.getDay() + 6) % 7; // Convert to 0 for Monday, 6 for Sunday
+                const dayIndex = (completedDate.getDay() + 6) % 7; /
                 weeklyCompletion[dayIndex]++;
             }
         }
     });
 
-    const totalTasks = tasks.length; // This counts all tasks ever added
+    const totalTasks = tasks.length;
     const totalDoneTasks = tasks.filter(t => t.done).length;
 
     const percentageToday = totalTasksToday > 0 ? ((completedToday / totalTasksToday) * 100).toFixed(0) : 0;
@@ -235,11 +229,11 @@ function displayProgressStats() {
         <div class="flex justify-around items-end h-20 bg-gray-200 dark:bg-gray-700 rounded p-1 mb-4">
     `;
 
-    const maxCompleted = Math.max(...weeklyCompletion, 1); // Ensure division by zero is avoided
+    const maxCompleted = Math.max(...weeklyCompletion, 1); 
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     weeklyCompletion.forEach((count, index) => {
-        const height = (count / maxCompleted) * 100; // Height as percentage
+        const height = (count / maxCompleted) * 100; 
         weeklyChartHtml += `
             <div class="flex flex-col items-center justify-end h-full">
                 <span class="text-xs mb-1">${count}</span>
@@ -272,7 +266,7 @@ function displayProgressStats() {
 // --- Modal Functions for Old Tasks ---
 function openModal() {
     oldTasksModal.classList.remove("hidden");
-    oldTasksModal.classList.add("flex"); // Use flex for centering
+    oldTasksModal.classList.add("flex"); // 
 }
 
 function closeModal() {
@@ -282,7 +276,7 @@ function closeModal() {
 
 async function viewOldTasks(dateStr) {
     const userId = getOrCreateUserId();
-    if (!dateStr) return; // Don't proceed if no date selected
+    if (!dateStr) return; 
 
     try {
         const response = await fetch(`/get-tasks-by-date/?user_id=${userId}&date=${dateStr}`);
@@ -329,7 +323,6 @@ function renderModalTasks(date, tasksForDate) {
 
 // Event Listeners for modal
 closeModalBtn.addEventListener("click", closeModal);
-// Close modal when clicking outside of it
 window.addEventListener("click", (event) => {
     if (event.target === oldTasksModal) {
         closeModal();
