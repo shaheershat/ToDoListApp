@@ -1,0 +1,144 @@
+/* General body styles and transitions (keep existing) */
+body {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- Flatpickr Base Styles (Overriding default theme) --- */
+/* This ensures consistency regardless of dark mode */
+.flatpickr-calendar {
+    font-family: 'Inter', sans-serif; /* Use your app's font if desired */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Tailwind shadow-md equivalent */
+    border-radius: 0.5rem; /* Tailwind rounded-lg equivalent */
+    padding: 1rem; /* p-4 equivalent */
+    z-index: 9999; /* Ensure it's on top */
+}
+
+/* Header (month/year) */
+.flatpickr-current-month .flatpickr-month,
+.flatpickr-current-month .flatpickr-year,
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month,
+.flatpickr-weekday,
+.flatpickr-day {
+    /* Base color, overridden by dark/light specific rules */
+    color: inherit; /* Inherit from parent for easier overriding */
+}
+
+/* Selected day */
+.flatpickr-day.selected,
+.flatpickr-day.today.selected {
+    background: #3b82f6 !important; /* blue-500 */
+    border-color: #3b82f6 !important; /* blue-500 */
+    color: #ffffff !important;
+}
+
+/* Today's date */
+.flatpickr-day.today {
+    border-color: #3b82f6 !important; /* blue-500 border for today */
+    color: #3b82f6; /* Default text color for today */
+}
+
+
+/* --- Light Mode Specific Styles (Default) --- */
+/* Applied when no .dark class is present on html */
+.flatpickr-calendar {
+    background: #ffffff; /* white */
+    border: 1px solid #e5e7eb; /* gray-200 */
+}
+
+.flatpickr-current-month .flatpickr-month,
+.flatpickr-current-month .flatpickr-year,
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    color: #1f2937; /* gray-900 text */
+    fill: #1f2937; /* for SVG arrows */
+}
+
+.flatpickr-weekday {
+    color: #4b5563; /* gray-600 */
+}
+
+.flatpickr-day {
+    color: #1f2937; /* gray-900 text */
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+    background: #f3f4f6 !important; /* gray-100 */
+    color: #1f2937 !important;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.disabled {
+    color: #9ca3af !important; /* gray-400 - dimmed */
+}
+
+/* For time picker arrows/inputs */
+.flatpickr-time {
+    color: #1f2937;
+}
+.numInputWrapper span.arrowUp:after,
+.numInputWrapper span.arrowDown:after {
+    border-top-color: #1f2937 !important; /* for time picker arrows */
+    border-bottom-color: #1f2937 !important;
+}
+
+
+/* --- Dark Mode Specific Styles --- */
+/* Applied when html has .dark class */
+.dark .flatpickr-calendar {
+    background: #374151; /* gray-700 */
+    border: 1px solid #4b5563; /* gray-600 */
+}
+
+.dark .flatpickr-current-month .flatpickr-month,
+.dark .flatpickr-current-month .flatpickr-year,
+.dark .flatpickr-months .flatpickr-prev-month,
+.dark .flatpickr-months .flatpickr-next-month {
+    color: #ffffff; /* white text */
+    fill: #ffffff; /* for SVG arrows */
+}
+
+.dark .flatpickr-weekday {
+    color: #d1d5db; /* gray-300 */
+}
+
+.dark .flatpickr-day {
+    color: #ffffff; /* white text */
+}
+
+.dark .flatpickr-day:hover,
+.dark .flatpickr-day:focus {
+    background: #4b5563 !important; /* gray-600 */
+    color: #ffffff !important;
+}
+
+.dark .flatpickr-day.prevMonthDay,
+.dark .flatpickr-day.nextMonthDay,
+.dark .flatpickr-day.disabled {
+    color: #6b7280 !important; /* gray-500 - dimmed */
+}
+
+/* For time picker arrows/inputs in dark mode */
+.dark .flatpickr-time {
+    color: #ffffff;
+}
+.dark .numInputWrapper span.arrowUp:after,
+.dark .numInputWrapper span.arrowDown:after {
+    border-top-color: #ffffff !important; /* for time picker arrows */
+    border-bottom-color: #ffffff !important;
+}
+
+/* Ensure the calendar input field itself also respects dark mode */
+#calendarInput.form-control[readonly] { /* Flatpickr adds form-control to its input */
+    background-color: #ffffff; /* Light mode default */
+    border-color: #d1d5db;
+    color: #1f2937;
+}
+
+html.dark #calendarInput.form-control[readonly] {
+    background-color: #374151; /* Dark mode background for input field */
+    border-color: #4b5563;
+    color: #ffffff;
+}
